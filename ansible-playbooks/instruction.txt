@@ -1,0 +1,9 @@
+1. Run ec2.yml first. It will launch an EC2 Instance on AWS cloud and update the IP to the inventory file (./inventory) . You can change the  key file name name in the variable in playbook ec2.yml
+
+use the following command to run the first playbook:
+# ansible-playbook ec2.yml
+
+2. Run the other playbook  deploy-app-docker-nginx.yml on the  cloud, it will deploy the whole project on the created EC2 instance.
+
+use the following command to run the second playbook:
+# ansible-playbook -i inventory deploy-app-docker-nginx.yml
