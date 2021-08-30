@@ -1,4 +1,7 @@
 - hosts: localhost
+  # Edit the keypath for changing the private key file path
+  vars:
+    - keypath: "/root/ws/Shona.pem"
   tasks:
     - name: Creating security group
       ec2_group:
@@ -39,6 +42,6 @@
       blockinfile:
         path: inventory
         block: |
-          {{ instancee['instances'][0]['public_ip'] }} ansible_user=ec2-user ansible_ssh_private_key_file=/root/ws/Shona.pem
+          {{ instancee['instances'][0]['public_ip'] }} ansible_user=ec2-user ansible_ssh_private_key_file={{ keypath }}
 
 
