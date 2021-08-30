@@ -1,0 +1,59 @@
+- hosts: cloud
+  vars:
+    - packages:
+        - "git"
+        - "docker"
+    - prerequisites:
+        - "python3-pip"
+        - "python-pip"
+        - "python3-setuptools"
+  tasks:
+    - name: Installing packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages }}"
+      become: yes
+
+    - name: Starting docker
+      service:
+        name: docker
+        state: restarted
+      become: yes
+
+    - name: Installing Essentials
+      package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ prerequisites }}"
+      become: yes
+
+    - name: Installing Docker API
+      pip:
+        name: 
+          - docker
+    - shell: pip install docker-py
+
+    - name: Cloning the project
+      git:
+        repo: https://github.com/Prateek937/flask-app-nginx.git
+        clone: yes
+        dest: /root/project
+        version: master
+      become: yes
+
+    - name: Build Docker Image with Dockerfile
+      docker_image:
+        path: /root/project/
+        name: flask-app-nginx
+        tag: latest
+      become: yes
+
+    - name: Running the container 
+      docker_container:
+        name: python-nginx
+        image: flask-app-nginx
+        state: started
+        ports:
+          - "8080:80"
+      become: yes
